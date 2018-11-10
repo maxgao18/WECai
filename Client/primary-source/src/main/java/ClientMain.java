@@ -1,5 +1,6 @@
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonValue;
 import java.io.StringReader;
 import java.net.URI;
 
@@ -19,43 +20,75 @@ public class ClientMain {
         new ClientMain().run();
     }
 
-    public void run() {
-        try {
-            final ChatClientEndpoint clientEndPoint = new ChatClientEndpoint(new URI("ws://35.183.103.104:8080/connect_dev"));
-            clientEndPoint.addMessageHandler(new ChatClientEndpoint.MessageHandler() {
-                public void handleMessage(String s) {
-                    System.out.println("RECEIVED: " + s);
-                    if (s.charAt(0) != '{') {
+    public ChatClientEndpoint clientEndpoint() throws Exception {
+        ChatClientEndpoint clientEndPoint = new ChatClientEndpoint(new URI("ws://35.183.103.104:8080/connect_dev"));
+        clientEndPoint.addMessageHandler(new ChatClientEndpoint.MessageHandler() {
+            public void handleMessage(String s) {
+                try {
+                    System.out.println((s.charAt(0) == '{') + "RECEIVED: " + s);
+                    if (s.charAt(0) == '{') {
                         States[][] state = parseArr(s);
                         printyourface.writeToHTML(state);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
+            }
+        });
+        return clientEndPoint;
+    }
+
+    public void run() {
+        try {
+            ChatClientEndpoint clientEndPoint = clientEndpoint();
 
             clientEndPoint.sendMessage(getMessage(TYPE_REGISTRATION, "", TEAM_ID));
 
             while (true) {
                 Thread.sleep(3000);
-                clientEndPoint.sendMessage(getMessage(TYPE_MOVE, "DOWN", TEAM_ID));
+                try {
+                    clientEndPoint.sendMessage(getMessage(TYPE_MOVE, "DOWN", TEAM_ID));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    clientEndPoint = clientEndpoint();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
+            run();
         }
+    }
+
+    private void printStates(States[][] states) {
+        System.out.print("[");
+        for (States[] state : states) {
+            System.out.print("{");
+            for (States st : state) {
+                System.out.print(st == null ? "null, " : st.toString() + ", ");
+            }
+            System.out.println("},");
+        }
+        System.out.println("]");
     }
 
     private States[][] parseArr(String s) {
         States[][] states = new States[17][17];
+        //printStates(states);
         JsonObject jsonObject = Json.createReader(new StringReader(s)).readObject();
+
+        System.out.println(jsonObject);
         for (int i = 0; i < states.length; i++) {
             for (int j = 0; j < states[i].length; j++) {
-                states[j][i] = getState(jsonObject.getString(i + "," + j));
+                states[j][i] = getState(jsonObject.get(i + "," + j));
             }
         }
+        printStates(states);
         return states;
     }
 
-    private States getState(String s) {
-        if("wall".equals(s) || "trail".equals(s)) {
+    private States getState(JsonValue jv) {
+        String s = jv.toString();
+        if ("wall".equals(s) || "trail".equals(s)) {
             return States.WALL;
         } else if ("".equals(s)) {
             return States.EMPTY;
