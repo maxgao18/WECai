@@ -11,11 +11,17 @@ public class GameAI {
     Point opponentStart = new Point(8, 14);
     enum Moves {LEFT, RIGHT, UP, DOWN}
     Map<Moves, Integer> movesToIndex;
+    Map<Integer, Moves> indexToMoves;
 
     int depth = 10;
     int winningScore = 10000;
     int losingScore = -winningScore;
     int tyingScore = 0;
+
+    public GameAI(States[][] gameState) {
+        this.gameState = gameState;
+        setMaps();
+    }
 
     public GameAI() {
         gameState = new States[17][17];
@@ -28,7 +34,11 @@ public class GameAI {
             gameState[a][16] = States.WALL;
         }
 
-        movesToIndex = new HashMap<>();
+        setMaps();
+    }
+
+    private void setMaps () {
+        movesToIndex = new HashMap<Moves, Integer>();
         movesToIndex.put(Moves.LEFT, 0);
         movesToIndex.put(Moves.RIGHT, 1);
         movesToIndex.put(Moves.UP, 2);
@@ -130,7 +140,7 @@ public class GameAI {
             if (didCloseOffNewSpace(playerNewPos, move)) {
                 // calculate new opponent score (max of all possible opponent scores)
                 int opponentNewScore = 0;
-                int playerNewScore = findNumOpenSpots(playerNewPos)
+                int playerNewScore = findNumOpenSpots(playerNewPos);
                 Point[] adjPoints = getAdjacentPoints(oppPlayer);
                 for (int i = 0; i < adjPoints.length; i++) {
                     int tempAdjScore = findNumOpenSpots(adjPoints[i]);
@@ -188,8 +198,9 @@ public class GameAI {
 
         // call helper for all possible moves
 
+        int [] scores = new int[movesToIndex.size()];
+
         Map<Moves, Point> movePointMap = getMoveToAdjacentPoints(cplayerpos);
-        int []
         for (Map.Entry<Moves, Point> entry : movePointMap.entrySet()) {
             Moves move = entry.getKey();
             Point newPosition = entry.getValue();

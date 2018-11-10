@@ -186,7 +186,7 @@ public class GameAI {
         // call helper for all possible moves
 
         Map<Moves, Point> movePointMap = getMoveToAdjacentPoints(cplayerpos);
-        int []
+
         for (Map.Entry<Moves, Point> entry : movePointMap.entrySet()) {
             Moves move = entry.getKey();
             Point newPosition = entry.getValue();
