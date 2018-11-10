@@ -42,6 +42,12 @@ public class GameAI {
         movesToIndex.put(Moves.RIGHT, 1);
         movesToIndex.put(Moves.UP, 2);
         movesToIndex.put(Moves.DOWN, 3);
+
+        indexToMoves = new HashMap<Integer, Moves>();
+        indexToMoves.put(0, Moves.LEFT);
+        indexToMoves.put(1, Moves.RIGHT);
+        indexToMoves.put(2, Moves.UP);
+        indexToMoves.put(3, Moves.DOWN);
     }
 
     // Finds number of open spots in one block given a current open spot
@@ -175,6 +181,7 @@ public class GameAI {
             newPlayer2pos = playerNewPos;
         }
 
+
         if (cPlayerID == 1) {
             gameState[playerNewPos.x][playerNewPos.y] = States.PLAYER1;
         } else {
@@ -183,12 +190,19 @@ public class GameAI {
 
         int nextScore = minMax(alpha, beta, currDepth-1, nextPlayerID, newPlayer1pos, newPlayer2pos, scoreP1, scoreP2);
 
+        gameState[playerNewPos.x][playerNewPos.y] = States.EMPTY;
+
         return nextScore;
     }
 
     private int minMax(int alpha, int beta, int currDepth, int cPlayerID, Point player1pos, Point player2pos, int scoreP1, int scoreP2) {
-        int cmin = 9999999;
-        int cmax = -9999999;
+        if (currDepth == 0) {
+            if (cPlayerID == 1) {
+                return scoreP1 - scoreP2;
+            } else {
+                return scoreP2 - scoreP1;
+            }
+        }
 
         Point cplayerpos = player1pos;
         if (cPlayerID == 2) {
@@ -203,18 +217,27 @@ public class GameAI {
         for (Map.Entry<Moves, Point> entry : movePointMap.entrySet()) {
             Moves move = entry.getKey();
             Point newPosition = entry.getValue();
-
+            scores[movesToIndex.get(move)] = minMaxHelper(alpha, beta, currDepth, cPlayerID, move, newPosition, player1pos, player2pos, scoreP1, scoreP2);
         }
 
-        if (cPlayer.x == oppPlayer.x && cPlayer.y == oppPlayer.y) {
-            return tyingScore;
+        // find max score (player 1)
+        if (cPlayerID == 1) {
+            int maxScore = scores[0];
+            for (int score: scores) {
+                maxScore = maxScore > score ? maxScore : score;
+            }
+            return maxScore;
         }
-        return losingScore;
+
+        // return min score (player 2)
+        int minScore = scores[0];
+        for (int score: scores) {
+            minScore = minScore < score ? minScore : score;
+        }
+        return minScore;
     }
 
     private boolean isEmpty(int x, int y) {
         return gameState[x][y] == States.EMPTY;
     }
-
-
 }
