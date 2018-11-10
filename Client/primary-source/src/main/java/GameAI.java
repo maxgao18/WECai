@@ -13,7 +13,7 @@ public class GameAI {
 
     int depth = 1;
     int winningScore = 10000;
-    int losingScore = -winningScore;
+    int losingScore = -10000;
     int tyingScore = 0;
 
     public GameAI(States[][] gameState) {
@@ -168,6 +168,7 @@ public class GameAI {
         } else {
             // spot is a player
             if (playerNewPos.x == oppPlayer.x && playerNewPos.y == oppPlayer.y) {
+                System.out.println("players colliding");
                 return tyingScore;
             }
             // spot is a losing point
@@ -282,6 +283,7 @@ public class GameAI {
         int scoreP1 = findNumOpenSpots(left);
 
         int score = minMaxHelper(alpha, beta, depth, 1, Moves.LEFT, left, player1pos, player2pos, scoreP1, scoreP2);
+        System.out.println(score);
         if (bestScore < score) {
             bestScore = score;
             bestMove = Moves.LEFT;
@@ -291,7 +293,7 @@ public class GameAI {
         Point right = new Point(player1pos.x+1, player1pos.y);
         scoreP1 = findNumOpenSpots(right);
 
-        score = minMaxHelper(alpha, beta, depth, 1, Moves.RIGHT, left, player1pos, player2pos, scoreP1, scoreP2);
+        score = minMaxHelper(alpha, beta, depth, 1, Moves.RIGHT, right, player1pos, player2pos, scoreP1, scoreP2);
         if (bestScore < score) {
             bestScore = score;
             bestMove = Moves.RIGHT;
@@ -301,7 +303,7 @@ public class GameAI {
         Point up = new Point(player1pos.x, player1pos.y-1);
         scoreP1 = findNumOpenSpots(up);
 
-        score = minMaxHelper(alpha, beta, depth, 1, Moves.RIGHT, left, player1pos, player2pos, scoreP1, scoreP2);
+        score = minMaxHelper(alpha, beta, depth, 1, Moves.UP, up, player1pos, player2pos, scoreP1, scoreP2);
         if (bestScore < score) {
             bestScore = score;
             bestMove = Moves.UP;
@@ -311,10 +313,10 @@ public class GameAI {
         Point down = new Point(player1pos.x, player1pos.y+1);
         scoreP1 = findNumOpenSpots(down);
 
-        score = minMaxHelper(alpha, beta, depth, 1, Moves.RIGHT, left, player1pos, player2pos, scoreP1, scoreP2);
+        score = minMaxHelper(alpha, beta, depth, 1, Moves.DOWN, down, player1pos, player2pos, scoreP1, scoreP2);
         if (bestScore < score) {
             bestScore = score;
-            bestMove = Moves.UP;
+            bestMove = Moves.DOWN;
             alpha = bestScore;
         }
 

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<div id="container"> <center> <h1> <font color="white";> TRONai </font> </h1> </center>
+</div>
+<style>
+body {
+    background-color: black;
+}
+</style>
+    <script>
+        document.createSvg = function(tagName) {
+            var svgNS = "http://www.w3.org/2000/svg";
+            return this.createElementNS(svgNS, tagName);
+        };
+
+        var numberPerSide = 20;
+        var size = 10;
+        var pixelsPerSide = 400;
+
+
+        // Require x, y, wall | p1 | p2 | tail
+
+        var grid = function(numberPerSide, size, pixelsPerSide, blocks) {
+            var svg = document.createSvg("svg");
+            svg.setAttribute("width", pixelsPerSide);
+            svg.setAttribute("height", pixelsPerSide);
+            svg.setAttribute("viewBox", [-50, -50, numberPerSide * size + 51, numberPerSide * size + 51].join(" "));
+
+            var wallColour = "#123abc"
+            var p1Colour = "#ff3fac"
+            var p2Colour = "#31d6ff"
+            var tailColour = "#ccff00"
+            var emptyColour = "black"
+
+            var textColour = "black"
+
+
+            for (i = 0; i < blocks.length; i++) {
+                var bx = blocks[i].x
+                var by = blocks[i].y
+
+                var paintColour = null
+                switch (blocks[i].type) {
+                    case "wall":
+                        paintColour = wallColour;
+                        break;
+                    case "p1":
+                        paintColour = p1Colour;
+                        break;
+                    case "p2":
+                        paintColour = p2Colour;
+                        break;
+                    case "tail":
+                        paintColour = tailColour;
+                        break;
+                    case "empty":
+                        paintColour = emptyColour;
+                        break;
+                }
+
+                var g = document.createSvg("g");
+                g.setAttribute("transform", ["translate(", bx * size, ",", by * size, ")"].join(""));
+                var number = numberPerSide * bx + by;
+                var box = document.createSvg("rect");
+                box.setAttribute("style", "stroke:gray;stroke-width:1;fill-opacity:1;stroke-opacity:1");
+                box.setAttribute("width", size);
+                box.setAttribute("height", size);
+                box.setAttribute("fill", paintColour);
+                box.setAttribute("id", "b" + number);
+                g.appendChild(box);
+                svg.appendChild(g);
+            }
+
+
+            svg.addEventListener(
+                    "click",
+                    function(e) {
+                var id = e.target.id;
+                if (id)
+                    alert(id.substring(1));
+            },
+            false);
+            return svg;
+        };
+
+        var container = document.getElementById("container");
