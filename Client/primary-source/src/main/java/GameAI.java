@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Queue;
 
 public class GameAI {
-    enum States {EMPTY, PLAYER1, PLAYER2, WALL}
     States[][] gameState;
     Point playerStart = new Point(8, 2);
     Point opponentStart = new Point(8, 14);
