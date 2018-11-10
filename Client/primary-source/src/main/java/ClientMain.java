@@ -1,6 +1,7 @@
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
+import java.awt.*;
 import java.io.StringReader;
 import java.net.URI;
 
@@ -20,29 +21,89 @@ public class ClientMain {
         new ClientMain().run();
     }
 
-    public ChatClientEndpoint clientEndpoint() throws Exception {
-        ChatClientEndpoint clientEndPoint = new ChatClientEndpoint(new URI("ws://35.183.103.104:8080/connect_dev"));
-        clientEndPoint.addMessageHandler(new ChatClientEndpoint.MessageHandler() {
-            public void handleMessage(String s) {
-                try {
-                    System.out.println((s.charAt(0) == '{') + "RECEIVED: " + s);
-                    if (s.charAt(0) == '{') {
-                        States[][] state = parseArr(s);
-                        printyourface.writeToHTML(state);
+    private ChatClientEndpoint clientEndPoint = clientEndpoint();
+
+    public ChatClientEndpoint clientEndpoint() {
+        try {
+            ChatClientEndpoint clientEndPoint = new ChatClientEndpoint(new URI("ws://35.183.103.104:8080/connect_dev"));
+            clientEndPoint.addMessageHandler(new ChatClientEndpoint.MessageHandler() {
+                public void handleMessage(String s) {
+                    try {
+                        System.out.println((s.charAt(0) == '{') + "RECEIVED: " + s);
+                        if (s.charAt(0) == '{') {
+                            States[][] state = parseArr(s);
+                            printyourface.writeToHTML(state);
+                            States[][] copy = new States[17][17];
+                            for (int i = 0; i < copy.length; i++) {
+                                for (int j = 0; j < copy[i].length; j++) {
+                                    copy[i][j] = state[i][j];
+                                }
+                            }
+                            sendMove(callAI(copy));
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                }
+            });
+            return clientEndPoint;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    void sendMove(Moves move) {
+        clientEndPoint.sendMessage(getMessage(TYPE_MOVE, move.toString(), TEAM_ID));
+    }
+
+    public Moves initMove() {
+        States[][] gameState = new States[17][17];
+        Point playerStart = new Point(8, 2);
+        Point opponentStart = new Point(8, 14);
+
+        Point aipoint = playerStart;
+
+        for (int a = 0; a < 17; a++) {
+            for (int b = 0; b < 17; b++) {
+                gameState[a][b] = States.EMPTY;
+            }
+        }
+
+        gameState[playerStart.x][playerStart.y] = States.PLAYER1;
+        gameState[opponentStart.x][opponentStart.y] = States.PLAYER2;
+        for (int a = 0; a < 17; a++) {
+            gameState[0][a] = States.WALL;
+            gameState[16][a] = States.WALL;
+            gameState[a][0] = States.WALL;
+            gameState[a][16] = States.WALL;
+        }
+
+        Point cpos = new Point(8, 14);
+        GameAI ai = new GameAI(gameState);
+        return ai.getBestMove(aipoint, cpos);
+    }
+
+    public Moves callAI(States[][] gameState) {
+        Point aipoint = null, cpos = null;
+        for (int i = 0; i < 17; i++) {
+            for (int j = 0; j < 17; j++) {
+                if (gameState[i][j] == States.PLAYER1) {
+                    aipoint = new Point(i, j);
+                } else if (gameState[i][j] == States.PLAYER2) {
+                    cpos = new Point(i, j);
                 }
             }
-        });
-        return clientEndPoint;
+        }
+
+        GameAI ai = new GameAI(gameState);
+        return ai.getBestMove(aipoint, cpos);
     }
 
     public void run() {
         try {
-            ChatClientEndpoint clientEndPoint = clientEndpoint();
-
             clientEndPoint.sendMessage(getMessage(TYPE_REGISTRATION, "", TEAM_ID));
+            sendMove(initMove());
 
             while (true) {
                 Thread.sleep(3000);
@@ -59,7 +120,7 @@ public class ClientMain {
         }
     }
 
-    private void printStates(States[][] states) {
+    private static void printStates(States[][] states) {
         System.out.print("[");
         for (States[] state : states) {
             System.out.print("{");

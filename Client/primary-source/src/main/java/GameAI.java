@@ -307,7 +307,7 @@ public class GameAI {
             alpha = bestScore;
         }
 
-        Point up = new Point(player1pos.x, player1pos.y-1);
+        Point up = new Point(player1pos.x, player1pos.y+1);
         scoreP1 = findNumOpenSpots(up);
 
         score = minMaxHelper(alpha, beta, depth, 1, Moves.UP, up, player1pos, player2pos, scoreP1, scoreP2);
@@ -317,7 +317,7 @@ public class GameAI {
             alpha = bestScore;
         }
 
-        Point down = new Point(player1pos.x, player1pos.y+1);
+        Point down = new Point(player1pos.x, player1pos.y-1);
         scoreP1 = findNumOpenSpots(down);
 
         score = minMaxHelper(alpha, beta, depth, 1, Moves.DOWN, down, player1pos, player2pos, scoreP1, scoreP2);
