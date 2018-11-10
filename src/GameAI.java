@@ -4,9 +4,11 @@ import java.util.Queue;
 
 public class GameAI {
     enum states {EMPTY, PLAYER1, PLAYER2, WALL}
-    states [][] gameState = new states[17][17];
-    int [] playerStart = new int []{8, 2};
-    int [] opponentStart = new int []{8, 14};
+
+    states[][] gameState = new states[17][17];
+    int[] playerStart = new int[]{8, 2};
+    int[] opponentStart = new int[]{8, 14};
+
     enum move {LEFT, RIGHT, UP, DOWN}
 
     int depth = 10;
@@ -16,8 +18,8 @@ public class GameAI {
 
     // Finds number of open spots in one block given a current open spot
     private int findNumOpenSpots(Point p) {
-        boolean [][] visited = new boolean[17][17];
-        Queue <Point> queue = new LinkedList<Point>();
+        boolean[][] visited = new boolean[17][17];
+        Queue<Point> queue = new LinkedList<Point>();
         queue.add(p);
 
         int numEmpty = 0;
@@ -27,17 +29,17 @@ public class GameAI {
                 numEmpty++;
                 visited[cp.x][cp.y] = true;
 
-                if (cp.x-1 > 0) {
-                    queue.add(new Point(cp.x-1, cp.y));
+                if (cp.x - 1 > 0) {
+                    queue.add(new Point(cp.x - 1, cp.y));
                 }
-                if (cp.x+1 < 16) {
-                    queue.add(new Point(cp.x+1, cp.y));
+                if (cp.x + 1 < 16) {
+                    queue.add(new Point(cp.x + 1, cp.y));
                 }
-                if (cp.y-1 > 0) {
-                    queue.add(new Point(cp.x, cp.y-1));
+                if (cp.y - 1 > 0) {
+                    queue.add(new Point(cp.x, cp.y - 1));
                 }
-                if (cp.y+1 < 16) {
-                    queue.add(new Point(cp.x, cp.y+1));
+                if (cp.y + 1 < 16) {
+                    queue.add(new Point(cp.x, cp.y + 1));
                 }
             }
         }
@@ -45,25 +47,37 @@ public class GameAI {
     }
 
     // Finds out if the current move resulted in a potential closing off of a new space on the board
-    private boolean didCloseOffNewSpace (Point p, move m) {
+    private boolean didCloseOffNewSpace(Point p, move m) {
         if (m == move.LEFT) {
-            if (gameState[p.x-1][p.y] == states.EMPTY) {
+            if (isEmpty(p.x - 1, p.y) &&
+                    (isEmpty(p.x - 1, p.y - 1) || !isEmpty(p.x, p.y - 1)) &&
+                    (isEmpty(p.x - 1, p.y + 1) || !isEmpty(p.x, p.y + 1))) {
                 return false;
             }
         } else if (m == move.RIGHT) {
-            if (gameState[p.x+1][p.y] == states.EMPTY) {
+            if (isEmpty(p.x + 1, p.y) &&
+                    (isEmpty(p.x + 1, p.y - 1) || !isEmpty(p.x, p.y - 1)) &&
+                    (isEmpty(p.x + 1, p.y + 1) || !isEmpty(p.x, p.y + 1))) {
                 return false;
             }
         } else if (m == move.UP) {
-            if (gameState[p.x][p.y+1] == states.EMPTY) {
+            if (isEmpty(p.x, p.y + 1) &&
+                    (isEmpty(p.x - 1, p.y + 1) || !isEmpty(p.x - 1, p.y)) &&
+                    (isEmpty(p.x + 1, p.y + 1) || !isEmpty(p.x + 1, p.y))) {
                 return false;
             }
         } else if (m == move.DOWN) {
-            if (gameState[p.x][p.y-1] == states.EMPTY) {
+            if (isEmpty(p.x, p.y - 1) &&
+                    (isEmpty(p.x - 1, p.y - 1) || !isEmpty(p.x - 1, p.y)) &&
+                    (isEmpty(p.x + 1, p.y - 1) || !isEmpty(p.x + 1, p.y))) {
                 return false;
             }
         }
         return true;
+    }
+
+    private boolean isEmpty(int x, int y) {
+        return gameState[x][y] == states.EMPTY;
     }
 
     // Find "score" of board by performing BFS
