@@ -1,20 +1,15 @@
 import javax.websocket.*;
 import java.net.URI;
 
-/**
- * ChatServer Client
- *
- * @author Jiji_Sasidharan
- */
 @ClientEndpoint
 public class ChatClientEndpoint {
-    Session userSession = null;
+
+    private Session userSession = null;
     private MessageHandler messageHandler;
 
     public ChatClientEndpoint(URI endpointURI) {
         try {
-            WebSocketContainer container = ContainerProvider
-                    .getWebSocketContainer();
+            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(this, endpointURI);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -76,11 +71,6 @@ public class ChatClientEndpoint {
         this.userSession.getAsyncRemote().sendText(message);
     }
 
-    /**
-     * Message handler.
-     *
-     * @author Jiji_Sasidharan
-     */
     public static interface MessageHandler {
         public void handleMessage(String message);
     }
