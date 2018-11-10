@@ -8,7 +8,6 @@ public class GameAI {
     States[][] gameState;
     Point playerStart = new Point(8, 2);
     Point opponentStart = new Point(8, 14);
-    enum Moves {LEFT, RIGHT, UP, DOWN}
     Map<Moves, Integer> movesToIndex;
     Map<Integer, Moves> indexToMoves;
 
