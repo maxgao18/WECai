@@ -11,7 +11,7 @@ public class GameAI {
     Map<Moves, Integer> movesToIndex;
     Map<Integer, Moves> indexToMoves;
 
-    int depth = 10;
+    int depth = 1;
     int winningScore = 10000;
     int losingScore = -winningScore;
     int tyingScore = 0;
@@ -23,6 +23,11 @@ public class GameAI {
 
     public GameAI() {
         gameState = new States[17][17];
+        for (int a = 0; a < 17; a++) {
+            for (int b = 0; b < 17; b++) {
+                gameState[a][b] = States.EMPTY;
+            }
+        }
         gameState[playerStart.x][playerStart.y] = States.PLAYER1;
         gameState[opponentStart.x][opponentStart.y] = States.PLAYER2;
         for (int a = 0; a < 17; a++) {
@@ -212,11 +217,29 @@ public class GameAI {
 
         int [] scores = new int[movesToIndex.size()];
 
+        // alpha is max of min scores
+        // beta is min of max scores
+
         Map<Moves, Point> movePointMap = getMoveToAdjacentPoints(cplayerpos);
         for (Map.Entry<Moves, Point> entry : movePointMap.entrySet()) {
             Moves move = entry.getKey();
             Point newPosition = entry.getValue();
             scores[movesToIndex.get(move)] = minMaxHelper(alpha, beta, currDepth, cPlayerID, move, newPosition, player1pos, player2pos, scoreP1, scoreP2);
+
+            if (cPlayerID == 1) {
+                //maximizer
+                alpha = alpha > scores[movesToIndex.get(move)] ? alpha : scores[movesToIndex.get(move)];
+                if (alpha > beta) {
+                    return winningScore;
+                }
+            } else {
+                //minimizer
+                beta = beta < scores[movesToIndex.get(move)] ? beta : scores[movesToIndex.get(move)];
+                if (alpha > beta) {
+                    return losingScore;
+                }
+            }
+
         }
 
         // find max score (player 1)
@@ -238,5 +261,63 @@ public class GameAI {
 
     private boolean isEmpty(int x, int y) {
         return gameState[x][y] == States.EMPTY;
+    }
+
+    public Moves getBestMove(Point player1pos, Point player2pos) {
+        // alpha is max of min scores
+        int alpha = losingScore;
+        // beta is min of max scores
+        int beta = winningScore;
+        Moves bestMove = Moves.LEFT;
+        int bestScore = losingScore;
+
+        int scoreP2 = 0;
+        Point[] adjPoints = getAdjacentPoints(player2pos);
+        for (int i = 0; i < adjPoints.length; i++) {
+            int tempAdjScore = findNumOpenSpots(adjPoints[i]);
+            scoreP2 = scoreP2 > tempAdjScore ? scoreP2 : tempAdjScore;
+        }
+
+        Point left = new Point(player1pos.x-1, player1pos.y);
+        int scoreP1 = findNumOpenSpots(left);
+
+        int score = minMaxHelper(alpha, beta, depth, 1, Moves.LEFT, left, player1pos, player2pos, scoreP1, scoreP2);
+        if (bestScore < score) {
+            bestScore = score;
+            bestMove = Moves.LEFT;
+            alpha = bestScore;
+        }
+
+        Point right = new Point(player1pos.x+1, player1pos.y);
+        scoreP1 = findNumOpenSpots(right);
+
+        score = minMaxHelper(alpha, beta, depth, 1, Moves.RIGHT, left, player1pos, player2pos, scoreP1, scoreP2);
+        if (bestScore < score) {
+            bestScore = score;
+            bestMove = Moves.RIGHT;
+            alpha = bestScore;
+        }
+
+        Point up = new Point(player1pos.x, player1pos.y-1);
+        scoreP1 = findNumOpenSpots(up);
+
+        score = minMaxHelper(alpha, beta, depth, 1, Moves.RIGHT, left, player1pos, player2pos, scoreP1, scoreP2);
+        if (bestScore < score) {
+            bestScore = score;
+            bestMove = Moves.UP;
+            alpha = bestScore;
+        }
+
+        Point down = new Point(player1pos.x, player1pos.y+1);
+        scoreP1 = findNumOpenSpots(down);
+
+        score = minMaxHelper(alpha, beta, depth, 1, Moves.RIGHT, left, player1pos, player2pos, scoreP1, scoreP2);
+        if (bestScore < score) {
+            bestScore = score;
+            bestMove = Moves.UP;
+            alpha = bestScore;
+        }
+
+        return bestMove;
     }
 }
