@@ -14,7 +14,7 @@ public class ClientMain {
 
     private static String TYPE_MOVE = "MOVE";
 
-    static Printerface printyourface;
+    static Printerface printyourface = new JSBoard();
 
     public static void main(String[] args) throws Exception {
         new ClientMain().run();
