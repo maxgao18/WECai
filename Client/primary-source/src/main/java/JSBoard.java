@@ -52,7 +52,7 @@ public class JSBoard implements Printerface{
                     if (gs[x][y] != null) {
                         switch (gs[x][y]) {
                             case WALL:
-                                if (x == 0 || y == 0 || x == gs.length - 1 || y == gs[x].length - 1) {
+                                if (!(x == 0 || y == 0 || x == gs.length - 1 || y == gs[x].length - 1)) {
                                     bw.write("tail");
                                 } else {
                                     bw.write("wall");

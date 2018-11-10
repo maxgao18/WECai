@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<div id="container"> <center> <h1> <font color="white";> TRONai </font> </h1> </center>
+</div>
+<style>
+body {
+    background-color: black;
+}
+</style>
+    <script>
+        document.createSvg = function(tagName) {
+            var svgNS = "http://www.w3.org/2000/svg";
+            return this.createElementNS(svgNS, tagName);
+        };
+
+        var numberPerSide = 20;
+        var size = 10;
+        var pixelsPerSide = 400;
+
+
+        // Require x, y, wall | p1 | p2 | tail
+
+        var grid = function(numberPerSide, size, pixelsPerSide, blocks) {
+            var svg = document.createSvg("svg");
+            svg.setAttribute("width", pixelsPerSide);
+            svg.setAttribute("height", pixelsPerSide);
+            svg.setAttribute("viewBox", [-50, -50, numberPerSide * size + 51, numberPerSide * size + 51].join(" "));
+
+            var wallColour = "#123abc"
+            var p1Colour = "#ff3fac"
+            var p2Colour = "#31d6ff"
+            var tailColour = "#ccff00"
+            var emptyColour = "black"
+
+            var textColour = "black"
+
+
+            for (i = 0; i < blocks.length; i++) {
+                var bx = blocks[i].x
+                var by = blocks[i].y
+
+                var paintColour = null
+                switch (blocks[i].type) {
+                    case "wall":
+                        paintColour = wallColour;
+                        break;
+                    case "p1":
+                        paintColour = p1Colour;
+                        break;
+                    case "p2":
+                        paintColour = p2Colour;
+                        break;
+                    case "tail":
+                        paintColour = tailColour;
+                        break;
+                    case "empty":
+                        paintColour = emptyColour;
+                        break;
+                }
+
+                var g = document.createSvg("g");
+                g.setAttribute("transform", ["translate(", bx * size, ",", by * size, ")"].join(""));
+                var number = numberPerSide * bx + by;
+                var box = document.createSvg("rect");
+                box.setAttribute("style", "stroke:gray;stroke-width:1;fill-opacity:1;stroke-opacity:1");
+                box.setAttribute("width", size);
+                box.setAttribute("height", size);
+                box.setAttribute("fill", paintColour);
+                box.setAttribute("id", "b" + number);
+                g.appendChild(box);
+                svg.appendChild(g);
+            }
+
+
+            svg.addEventListener(
+                    "click",
+                    function(e) {
+                var id = e.target.id;
+                if (id)
+                    alert(id.substring(1));
+            },
+            false);
+            return svg;
+        };
+
+        var container = document.getElementById("container");
+        var block0 = {x:1, y: 1, type: "tail" };
+        var block1 = {x:1, y: 2, type: "tail" };
+        var block2 = {x:1, y: 3, type: "tail" };
+        var block3 = {x:1, y: 4, type: "tail" };
+        var block4 = {x:1, y: 5, type: "empty" };
+        var block5 = {x:1, y: 6, type: "tail" };
+        var block6 = {x:1, y: 7, type: "tail" };
+        var block7 = {x:1, y: 8, type: "tail" };
+        var block8 = {x:1, y: 9, type: "empty" };
+        var block9 = {x:1, y: 10, type: "tail" };
+        var block10 = {x:1, y: 11, type: "tail" };
+        var block11 = {x:1, y: 12, type: "empty" };
+        var block12 = {x:1, y: 13, type: "tail" };
+        var block13 = {x:1, y: 14, type: "empty" };
+        var block14 = {x:1, y: 15, type: "tail" };
+        var block15 = {x:2, y: 1, type: "tail" };
+        var block16 = {x:2, y: 2, type: "tail" };
+        var block17 = {x:2, y: 3, type: "tail" };
+        var block18 = {x:2, y: 4, type: "tail" };
+        var block19 = {x:2, y: 5, type: "empty" };
+        var block20 = {x:2, y: 6, type: "tail" };
+        var block21 = {x:2, y: 7, type: "empty" };
+        var block22 = {x:2, y: 8, type: "tail" };
+        var block23 = {x:2, y: 9, type: "tail" };
+        var block24 = {x:2, y: 10, type: "tail" };
+        var block25 = {x:2, y: 11, type: "tail" };
+        var block26 = {x:2, y: 12, type: "tail" };
+        var block27 = {x:2, y: 13, type: "empty" };
+        var block28 = {x:2, y: 14, type: "empty" };
+        var block29 = {x:2, y: 15, type: "empty" };
+        var block30 = {x:3, y: 1, type: "tail" };
+        var block31 = {x:3, y: 2, type: "empty" };
+        var block32 = {x:3, y: 3, type: "tail" };
+        var block33 = {x:3, y: 4, type: "empty" };
+        var block34 = {x:3, y: 5, type: "tail" };
+        var block35 = {x:3, y: 6, type: "empty" };
+        var block36 = {x:3, y: 7, type: "tail" };
+        var block37 = {x:3, y: 8, type: "empty" };
+        var block38 = {x:3, y: 9, type: "tail" };
+        var block39 = {x:3, y: 10, type: "empty" };
+        var block40 = {x:3, y: 11, type: "empty" };
+        var block41 = {x:3, y: 12, type: "tail" };
+        var block42 = {x:3, y: 13, type: "empty" };
+        var block43 = {x:3, y: 14, type: "tail" };
+        var block44 = {x:3, y: 15, type: "empty" };
+        var block45 = {x:4, y: 1, type: "empty" };
+        var block46 = {x:4, y: 2, type: "empty" };
+        var block47 = {x:4, y: 3, type: "tail" };
+        var block48 = {x:4, y: 4, type: "tail" };
+        var block49 = {x:4, y: 5, type: "tail" };
+        var block50 = {x:4, y: 6, type: "empty" };
+        var block51 = {x:4, y: 7, type: "tail" };
+        var block52 = {x:4, y: 8, type: "tail" };
+        var block53 = {x:4, y: 9, type: "empty" };
+        var block54 = {x:4, y: 10, type: "tail" };
+        var block55 = {x:4, y: 11, type: "empty" };
+        var block56 = {x:4, y: 12, type: "tail" };
+        var block57 = {x:4, y: 13, type: "tail" };
+        var block58 = {x:4, y: 14, type: "empty" };
+        var block59 = {x:4, y: 15, type: "tail" };
+        var block60 = {x:5, y: 1, type: "empty" };
+        var block61 = {x:5, y: 2, type: "tail" };
+        var block62 = {x:5, y: 3, type: "tail" };
+        var block63 = {x:5, y: 4, type: "tail" };
+        var block64 = {x:5, y: 5, type: "tail" };
+        var block65 = {x:5, y: 6, type: "tail" };
+        var block66 = {x:5, y: 7, type: "tail" };
+        var block67 = {x:5, y: 8, type: "tail" };
+        var block68 = {x:5, y: 9, type: "tail" };
+        var block69 = {x:5, y: 10, type: "empty" };
+        var block70 = {x:5, y: 11, type: "tail" };
+        var block71 = {x:5, y: 12, type: "empty" };
+        var block72 = {x:5, y: 13, type: "tail" };
+        var block73 = {x:5, y: 14, type: "tail" };
+        var block74 = {x:5, y: 15, type: "empty" };
+        var block75 = {x:6, y: 1, type: "tail" };
+        var block76 = {x:6, y: 2, type: "empty" };
+        var block77 = {x:6, y: 3, type: "tail" };
+        var block78 = {x:6, y: 4, type: "empty" };
+        var block79 = {x:6, y: 5, type: "tail" };
+        var block80 = {x:6, y: 6, type: "tail" };
+        var block81 = {x:6, y: 7, type: "empty" };
+        var block82 = {x:6, y: 8, type: "tail" };
+        var block83 = {x:6, y: 9, type: "tail" };
+        var block84 = {x:6, y: 10, type: "tail" };
+        var block85 = {x:6, y: 11, type: "tail" };
+        var block86 = {x:6, y: 12, type: "empty" };
+        var block87 = {x:6, y: 13, type: "tail" };
+        var block88 = {x:6, y: 14, type: "tail" };
+        var block89 = {x:6, y: 15, type: "empty" };
+        var block90 = {x:7, y: 1, type: "empty" };
+        var block91 = {x:7, y: 2, type: "tail" };
+        var block92 = {x:7, y: 3, type: "tail" };
+        var block93 = {x:7, y: 4, type: "tail" };
+        var block94 = {x:7, y: 5, type: "empty" };
+        var block95 = {x:7, y: 6, type: "tail" };
+        var block96 = {x:7, y: 7, type: "empty" };
+        var block97 = {x:7, y: 8, type: "empty" };
+        var block98 = {x:7, y: 9, type: "tail" };
+        var block99 = {x:7, y: 10, type: "tail" };
+        var block100 = {x:7, y: 11, type: "tail" };
+        var block101 = {x:7, y: 12, type: "tail" };
+        var block102 = {x:7, y: 13, type: "empty" };
+        var block103 = {x:7, y: 14, type: "empty" };
+        var block104 = {x:7, y: 15, type: "empty" };
+        var block105 = {x:8, y: 1, type: "tail" };
+        var block106 = {x:8, y: 2, type: "tail" };
+        var block107 = {x:8, y: 3, type: "tail" };
+        var block108 = {x:8, y: 4, type: "tail" };
+        var block109 = {x:8, y: 5, type: "empty" };
+        var block110 = {x:8, y: 6, type: "tail" };
+        var block111 = {x:8, y: 7, type: "tail" };
+        var block112 = {x:8, y: 8, type: "empty" };
+        var block113 = {x:8, y: 9, type: "tail" };
+        var block114 = {x:8, y: 10, type: "tail" };
+        var block115 = {x:8, y: 11, type: "tail" };
+        var block116 = {x:8, y: 12, type: "tail" };
+        var block117 = {x:8, y: 13, type: "empty" };
+        var block118 = {x:8, y: 14, type: "empty" };
+        var block119 = {x:8, y: 15, type: "tail" };
+        var block120 = {x:9, y: 1, type: "tail" };
+        var block121 = {x:9, y: 2, type: "tail" };
+        var block122 = {x:9, y: 3, type: "tail" };
+        var block123 = {x:9, y: 4, type: "tail" };
+        var block124 = {x:9, y: 5, type: "tail" };
+        var block125 = {x:9, y: 6, type: "tail" };
+        var block126 = {x:9, y: 7, type: "tail" };
+        var block127 = {x:9, y: 8, type: "tail" };
+        var block128 = {x:9, y: 9, type: "tail" };
+        var block129 = {x:9, y: 10, type: "tail" };
+        var block130 = {x:9, y: 11, type: "empty" };
+        var block131 = {x:9, y: 12, type: "empty" };
+        var block132 = {x:9, y: 13, type: "tail" };
+        var block133 = {x:9, y: 14, type: "tail" };
+        var block134 = {x:9, y: 15, type: "empty" };
+        var block135 = {x:10, y: 1, type: "tail" };
+        var block136 = {x:10, y: 2, type: "tail" };
+        var block137 = {x:10, y: 3, type: "tail" };
+        var block138 = {x:10, y: 4, type: "empty" };
+        var block139 = {x:10, y: 5, type: "tail" };
+        var block140 = {x:10, y: 6, type: "tail" };
+        var block141 = {x:10, y: 7, type: "tail" };
+        var block142 = {x:10, y: 8, type: "empty" };
+        var block143 = {x:10, y: 9, type: "empty" };
+        var block144 = {x:10, y: 10, type: "empty" };
+        var block145 = {x:10, y: 11, type: "tail" };
+        var block146 = {x:10, y: 12, type: "tail" };
+        var block147 = {x:10, y: 13, type: "tail" };
+        var block148 = {x:10, y: 14, type: "tail" };
+        var block149 = {x:10, y: 15, type: "tail" };
+        var block150 = {x:11, y: 1, type: "empty" };
+        var block151 = {x:11, y: 2, type: "empty" };
+        var block152 = {x:11, y: 3, type: "tail" };
+        var block153 = {x:11, y: 4, type: "empty" };
+        var block154 = {x:11, y: 5, type: "tail" };
+        var block155 = {x:11, y: 6, type: "tail" };
+        var block156 = {x:11, y: 7, type: "tail" };
+        var block157 = {x:11, y: 8, type: "tail" };
+        var block158 = {x:11, y: 9, type: "tail" };
+        var block159 = {x:11, y: 10, type: "tail" };
+        var block160 = {x:11, y: 11, type: "tail" };
+        var block161 = {x:11, y: 12, type: "tail" };
+        var block162 = {x:11, y: 13, type: "tail" };
+        var block163 = {x:11, y: 14, type: "tail" };
+        var block164 = {x:11, y: 15, type: "empty" };
+        var block165 = {x:12, y: 1, type: "empty" };
+        var block166 = {x:12, y: 2, type: "tail" };
+        var block167 = {x:12, y: 3, type: "empty" };
+        var block168 = {x:12, y: 4, type: "tail" };
+        var block169 = {x:12, y: 5, type: "tail" };
+        var block170 = {x:12, y: 6, type: "empty" };
+        var block171 = {x:12, y: 7, type: "tail" };
+        var block172 = {x:12, y: 8, type: "tail" };
+        var block173 = {x:12, y: 9, type: "tail" };
+        var block174 = {x:12, y: 10, type: "empty" };
+        var block175 = {x:12, y: 11, type: "tail" };
+        var block176 = {x:12, y: 12, type: "p1" };
+        var block177 = {x:12, y: 13, type: "tail" };
+        var block178 = {x:12, y: 14, type: "tail" };
+        var block179 = {x:12, y: 15, type: "tail" };
+        var block180 = {x:13, y: 1, type: "empty" };
+        var block181 = {x:13, y: 2, type: "tail" };
+        var block182 = {x:13, y: 3, type: "tail" };
+        var block183 = {x:13, y: 4, type: "tail" };
+        var block184 = {x:13, y: 5, type: "empty" };
+        var block185 = {x:13, y: 6, type: "empty" };
+        var block186 = {x:13, y: 7, type: "tail" };
+        var block187 = {x:13, y: 8, type: "empty" };
+        var block188 = {x:13, y: 9, type: "tail" };
+        var block189 = {x:13, y: 10, type: "tail" };
+        var block190 = {x:13, y: 11, type: "empty" };
+        var block191 = {x:13, y: 12, type: "tail" };
+        var block192 = {x:13, y: 13, type: "tail" };
+        var block193 = {x:13, y: 14, type: "empty" };
+        var block194 = {x:13, y: 15, type: "tail" };
+        var block195 = {x:14, y: 1, type: "empty" };
+        var block196 = {x:14, y: 2, type: "empty" };
+        var block197 = {x:14, y: 3, type: "tail" };
+        var block198 = {x:14, y: 4, type: "empty" };
+        var block199 = {x:14, y: 5, type: "tail" };
+        var block200 = {x:14, y: 6, type: "tail" };
+        var block201 = {x:14, y: 7, type: "tail" };
+        var block202 = {x:14, y: 8, type: "empty" };
+        var block203 = {x:14, y: 9, type: "tail" };
+        var block204 = {x:14, y: 10, type: "empty" };
+        var block205 = {x:14, y: 11, type: "tail" };
+        var block206 = {x:14, y: 12, type: "tail" };
+        var block207 = {x:14, y: 13, type: "tail" };
+        var block208 = {x:14, y: 14, type: "p2" };
+        var block209 = {x:14, y: 15, type: "tail" };
+        var block210 = {x:15, y: 1, type: "tail" };
+        var block211 = {x:15, y: 2, type: "tail" };
+        var block212 = {x:15, y: 3, type: "tail" };
+        var block213 = {x:15, y: 4, type: "tail" };
+        var block214 = {x:15, y: 5, type: "tail" };
+        var block215 = {x:15, y: 6, type: "tail" };
+        var block216 = {x:15, y: 7, type: "tail" };
+        var block217 = {x:15, y: 8, type: "tail" };
+        var block218 = {x:15, y: 9, type: "tail" };
+        var block219 = {x:15, y: 10, type: "tail" };
+        var block220 = {x:15, y: 11, type: "empty" };
+        var block221 = {x:15, y: 12, type: "tail" };
+        var block222 = {x:15, y: 13, type: "tail" };
+        var block223 = {x:15, y: 14, type: "tail" };
+        var block224 = {x:15, y: 15, type: "empty" };
+        var block_array = new Array(block0, block1, block2, block3, block4, block5, block6, block7, block8, block9, block10, block11, block12, block13, block14, block15, block16, block17, block18, block19, block20, block21, block22, block23, block24, block25, block26, block27, block28, block29, block30, block31, block32, block33, block34, block35, block36, block37, block38, block39, block40, block41, block42, block43, block44, block45, block46, block47, block48, block49, block50, block51, block52, block53, block54, block55, block56, block57, block58, block59, block60, block61, block62, block63, block64, block65, block66, block67, block68, block69, block70, block71, block72, block73, block74, block75, block76, block77, block78, block79, block80, block81, block82, block83, block84, block85, block86, block87, block88, block89, block90, block91, block92, block93, block94, block95, block96, block97, block98, block99, block100, block101, block102, block103, block104, block105, block106, block107, block108, block109, block110, block111, block112, block113, block114, block115, block116, block117, block118, block119, block120, block121, block122, block123, block124, block125, block126, block127, block128, block129, block130, block131, block132, block133, block134, block135, block136, block137, block138, block139, block140, block141, block142, block143, block144, block145, block146, block147, block148, block149, block150, block151, block152, block153, block154, block155, block156, block157, block158, block159, block160, block161, block162, block163, block164, block165, block166, block167, block168, block169, block170, block171, block172, block173, block174, block175, block176, block177, block178, block179, block180, block181, block182, block183, block184, block185, block186, block187, block188, block189, block190, block191, block192, block193, block194, block195, block196, block197, block198, block199, block200, block201, block202, block203, block204, block205, block206, block207, block208, block209, block210, block211, block212, block213, block214, block215, block216, block217, block218, block219, block220, block221, block222, block223, block224 );
+        container.appendChild(grid(17, 17, 750, block_array));
+</script>

@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Queue;
 
 public class GameAI {
+    public static GameAI gameAI;
+
     States[][] gameState;
     Point playerStart = new Point(8, 2);
     Point opponentStart = new Point(8, 14);
@@ -17,8 +19,13 @@ public class GameAI {
     int tyingScore = 0;
 
     public GameAI(States[][] gameState) {
+        gameAI = this;
         this.gameState = gameState;
         setMaps();
+    }
+
+    public static GameAI getInstance() {
+        return gameAI;
     }
 
     public GameAI() {

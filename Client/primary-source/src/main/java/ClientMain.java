@@ -6,7 +6,7 @@ import java.net.URI;
 
 public class ClientMain {
 
-    private static String TEAM_ID = "our_team_id";
+    private static String TEAM_ID = "1";
 
     private static String AUTHENTICATION_KEY = "random_key";
 
@@ -82,12 +82,31 @@ public class ClientMain {
                 states[j][i] = getState(jsonObject.get(i + "," + j));
             }
         }
+        int r = (int) (Math.random() * 15);
+        states[r + 1][r + 1] = States.PLAYER1;
+        int a = (int) (Math.random() * 15);
+        while (a == r) {
+            a = (int) (Math.random() * 15);
+        }
+        states[a + 1][a + 1] = States.PLAYER2;
+
         printStates(states);
         return states;
     }
 
     private States getState(JsonValue jv) {
         String s = jv.toString();
+        int r = (int) (Math.random() * 3);
+        switch (r) {
+            case 0:
+                s = "wall";
+                break;
+            case 1:
+                s = "trail";
+                break;
+            case 2:
+                s = "";
+        }
         if ("wall".equals(s) || "trail".equals(s)) {
             return States.WALL;
         } else if ("".equals(s)) {
